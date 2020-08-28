@@ -455,7 +455,11 @@ command_exists() {
 }
 
 sh_c() {
-  echoh "+ $*"
+  if [ "$SSH_ARGS" ]; then
+    echoh "+ ssh "$SSH_ARGS" $*"
+  else
+    echoh "+ $*"
+  fi
   if [ ! "${DRY_RUN-}" ]; then
     sh_f "$@"
   fi
