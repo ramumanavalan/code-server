@@ -17,26 +17,39 @@ usage() {
 Installs code-server for Linux, macOS and FreeBSD.
 It tries to use the system package manager if possible.
 After successful installation it explains how to start using code-server.
+
+Pass in user@host to install code-server on user@host over ssh and forward
+the code-server port in the foreground so that you can immediately access it!
+If you rerun the script, code-server will be updated only when required.
 ${not_curl_usage-}
 Usage:
 
-  $arg0 [--dry-run] [--version X.X.X] [--method detect] [--prefix ~/.local] [user@host]
+  $arg0 [--dry-run] [--version X.X.X] [--method detect] [--prefix ~/.local] [--start] [user@host]
 
   --dry-run
       Echo the commands for the install process without running them.
+
   --version X.X.X
       Install a specific version instead of the latest.
+
   --method [detect | standalone]
       Choose the installation method. Defaults to detect.
       - detect detects the system package manager and tries to use it.
         Full reference on the process is further below.
       - standalone installs a standalone release archive into ~/.local
         Add ~/.local/bin to your \$PATH to use it.
+
   --prefix <dir>
       Sets the prefix used by standalone release archives. Defaults to ~/.local
       The release is unarchived into ~/.local/lib/code-server-X.X.X
       and the binary symlinked into ~/.local/bin/code-server
       To install system wide pass ---prefix=/usr/local
+
+  --start
+      Ensures code-server is running and prints the URL at which it can be accessed.
+      Also will print code-server's password and when installing over ssh, will forward
+      the code-server port so that it can be easily accessed locally.
+      Will block on tailing code-server's logs.
 
 - For Debian, Ubuntu and Raspbian it will install the latest deb package.
 - For Fedora, CentOS, RHEL and openSUSE it will install the latest rpm package.
@@ -56,6 +69,8 @@ Usage:
   - The npm package builds the native modules on postinstall.
 
 It will cache all downloaded assets into ~/.cache/code-server
+With ssh installation, assets will be transferred over via scp
+as needed instead of being downloaded directly on the ssh host.
 
 More installation docs are at https://github.com/cdr/code-server/blob/master/doc/install.md
 EOF
